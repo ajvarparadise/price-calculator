@@ -1,15 +1,14 @@
 import { calculatePrice } from './price-calculator'
 
-var calculatedPrice = 0;
-var userType = 1;
-var productType = 0;
-var price = 100;
-var publishedDate = new Date();
+const userType = 1;
+const productType = 0;
+const price = 100;
+const publishedDate = new Date();
 
 try {
-  calculatedPrice = calculatePrice(userType, productType, price, publishedDate);
-} catch (ex) {
-  console.log(ex);
+  const calculatedPrice = calculatePrice(userType, productType, price, publishedDate);
+  console.log("Calculated price:", calculatedPrice);
+} catch (err) {
+  console.log(err);
 }
 
-console.log("Calculated price:", calculatedPrice);
