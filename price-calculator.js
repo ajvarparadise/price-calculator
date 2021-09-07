@@ -1,38 +1,45 @@
-// userType, 0 = normal, 1 = company
-// productType, 0 = new product, 1 = old product
-// price, the price of the product
-export const calculatePrice = function (userType, productType, price, publishedDate) {
-  try {
-    switch (userType) {
-      case 0: // normal
-        if (productType == 0) {
-          // new product
-          var enddateDiscount = 0;
-          if (publishedDate.toDateString() == new Date().toDateString())
-            enddateDiscount = 10;
-
-          return price + 25 - enddateDiscount;
-        } else if (productType == 1) {
-          // old product
-          return price + 35 - 0;
-        }
-        break;
-      case 1: // company
-        if (productType == 0) {
-          // new product
-          if (publishedDate.toDateString() === new Date().toDateString()) {
-            return price + 25 - 15; // Enddate discount and company discount
-          }
-
-          return price + 25 - 5; // Only company discount
-        } else if (productType == 1) {
-          // old product
-          return price + 35 - 5;
-        }
-        break;
-    }
-  } catch (ex) {
-    console.log(ex);
-  }
-  return 0;
+/** Product prices per type */
+const PRODUCT_TYPE_PRICES = {
+  NEW: 25,
+  OLD: 35,
 };
+
+/** User Types */
+const COMPANY_USER = 0;
+
+/** Product Types */
+const PRODUCT_TYPE = {
+  0: "NEW",
+  1: "OLD",
+};
+
+const PRODUCT_TYPE_NEW = 'NEW';
+
+/** Rebates */
+export const COMPANY_REBATE = 5;
+export const NORMAL_REBATE = 10;
+export const NO_REBATE = 0;
+
+export function getRebate(userType, productType, isPublishedToday) {
+  if (isPublishedToday && PRODUCT_TYPE[productType] === PRODUCT_TYPE_NEW) {
+    return NORMAL_REBATE;
+  } else if (userType === COMPANY_USER) {
+    return COMPANY_REBATE;
+  } else {
+    return NO_REBATE
+  }
+}
+
+const getIsPublishedToday = (publishedDate) =>
+  publishedDate.toDateString() === new Date().toDateString();
+
+const getCalculatedPrice = (productPrice, productTypePrice, rebate) =>
+  productPrice + productTypePrice - rebate;
+
+export function calculatePrice(userType, productType, price, publishedDate) {
+  const isPublishedToday = getIsPublishedToday(publishedDate);
+  const productTypePrice = PRODUCT_TYPE_PRICES[PRODUCT_TYPE[productType]];
+  const rebate = getRebate(userType, productType, isPublishedToday);
+  return getCalculatedPrice(price, productTypePrice, rebate) || NO_REBATE;
+}
+
