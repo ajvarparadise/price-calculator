@@ -40,6 +40,6 @@ export function calculatePrice(userType, productType, price, publishedDate) {
   const isPublishedToday = getIsPublishedToday(publishedDate);
   const productTypePrice = PRODUCT_TYPE_PRICES[PRODUCT_TYPE[productType]];
   const rebate = getRebate(userType, productType, isPublishedToday);
-  return getCalculatedPrice(price, productTypePrice, rebate) || NO_REBATE;
+  return getCalculatedPrice(price, productTypePrice, rebate);
 }
 
